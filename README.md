@@ -6,6 +6,8 @@
 
 - Backends For Frontends が HttpClient で実装できる場合
 
+![bff-http](https://raw.githubusercontent.com/taguch1/try-bff/images/readme/bff-http.png?token=AEy1_j9jIPsrv6bzAq6NewdgcdcE3Yqwks5cqr1RwA%3D%3D)
+
 ```mermaid
 sequenceDiagram
     frondends(js)->>LB(nginx):https
@@ -14,7 +16,10 @@ sequenceDiagram
     APIServer->>AttchedResourece:tcp(mysql)
 ```
 
+
 - Backends For Frontends が GRPClient で実装できる場合
+
+![bff-grpc](https://raw.githubusercontent.com/taguch1/try-bff/images/readme/bff-grpc.png?token=AEy1_nlXpcXPVQ3rGXdq5iF2W14FCzteks5cqrz3wA%3D%3D)
 
 ```mermaid
 sequenceDiagram
@@ -25,6 +30,8 @@ sequenceDiagram
 ```
 
 - Backends For Frontends が 両方混在する場合
+
+![bff-mixed](https://raw.githubusercontent.com/taguch1/try-bff/images/readme/bff-mixed.png?token=AEy1_t0e8-X3qJ1Cho2GnrGC4Vlmzt92ks5cqr0cwA%3D%3D)
 
 ```mermaid
 sequenceDiagram
