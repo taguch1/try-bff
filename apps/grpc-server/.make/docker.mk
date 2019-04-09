@@ -2,7 +2,7 @@
 #===============================================================
 docker-build:
 	docker build -t $(image_repo):$(IMAGE_TAG) .
-	docker tag $(image_repo):$(tag) $(image_repo):latest
+	docker tag $(image_repo):$(IMAGE_TAG) $(image_repo):latest
 
 docker-push:
 	docker push $(image_repo):$(IMAGE_TAG)
