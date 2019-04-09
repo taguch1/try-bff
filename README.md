@@ -57,11 +57,11 @@ sequenceDiagram
 
 ### 各モジュール作成
 
-- frondend
-- bff-grpc
-- backend-api
-- bff-http
-- grpc-gateway
+- [frondend](https://github.com/taguch1/try-bff/tree/master/apps/frondend)
+- [bff-grpc](https://github.com/taguch1/try-bff/tree/master/apps/bff-grpc)
+- [grpc-server](https://github.com/taguch1/try-bff/tree/master/apps/grpc-server)
+- [bff-http](https://github.com/taguch1/try-bff/tree/master/apps/bff-http)
+- [grpc-gateway](https://github.com/taguch1/try-bff/tree/master/apps/grpc-gateway)
 
 ### Docker イメージ
 
@@ -85,8 +85,8 @@ CircleCIがデブロイ先(docker for mac)まで届かないので省略
 
 ### 監視(予定は未定)
 
-- prometeus
-- graphana
+- [prometheus](https://prometheus.io/)
+- [grafana](https://grafana.com/)
 
 ### バッチ処理(予定は未定)
 

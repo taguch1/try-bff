@@ -8,9 +8,6 @@ endif
 ifeq ($(shell command -v goimports 2> /dev/null),)
 	go get -u golang.org/x/tools/cmd/goimports
 endif
-ifeq ($(shell command -v make2help 2> /dev/null),)
-	go get -u github.com/Songmu/make2help/cmd/make2help
-endif
 
 fmt:
 	goimports -w cmd/$(name)/main.go
@@ -25,9 +22,9 @@ lint:
 	done
 
 test:
-	go test $$(go list ./... | grep -v /test/ | tr '\n' ' ')
+	go test $$(go list ./... | grep -v /test/ | grep -v /proto| tr '\n' ' ')
 
-build: $(srcs)
+build:
 	$(eval revision := $(shell if [[ $$REV = "" ]]; then git rev-parse --short HEAD; else echo $$REV;fi;))
 	$(eval ldflags  := -X 'main.revision=$(revision)' -extldflags '-static')
 	GOOS=$(OS) GOARCH=amd64 CGO_ENABLED=0 go build -ldflags "$(ldflags)" -o $(bin_dir)/$(name)_$(OS)_amd64 $(BUILD_OPTIONS) cmd/$(name)/main.go
@@ -44,5 +41,4 @@ endif
 	if [ ! -d $(PREFIX)/bin ]; then mkdir -p $(PREFIX)/bin; fi
 	cp -a $(bin_dir)/$(name)_$(OS)_amd64 $(PREFIX)/bin/$(bin)
 
-
-.PHONY: setup fmt lint test build install release
+.PHONY: setup fmt lint test build release install

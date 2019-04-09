@@ -3,8 +3,7 @@
 helm-cat: .change-cluster
 	helm get $(helm_name)
 
-helm-apply: .change-cluster
-	$(eval helm_apply_options := --set image.tag=$(IMAGE_TAG))
+helm-apply: .change-cluster .image-tag
 	helm upgrade --install \
 		--namespace $(k8s_namespace) \
 		--values $(helm_dir)/env/$(ENV).yaml \
@@ -14,8 +13,7 @@ helm-apply: .change-cluster
 helm-delete: .change-cluster
 	helm delete --purge $(helm_name)
 
-helm-diff: .change-cluster
-	$(eval helm_apply_options := --set image.tag=$(IMAGE_TAG))
+helm-diff: .change-cluster .image-tag
 	helm diff \
 		--values $(helm_dir)/env/$(ENV).yaml \
 		$(helm_apply_options) \
@@ -27,5 +25,6 @@ helm-restart: .change-cluster
 
 # Internal Task
 #===============================================================
+# 事故防止でdocker-for-desktop固定
 .change-cluster:
 	kubectx docker-for-desktop
