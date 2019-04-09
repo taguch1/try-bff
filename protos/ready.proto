@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package proto;
+
+service Ready {
+  rpc Get (ReadyGetRequest) returns (ReadyGetResponse) {}
+  rpc Update (ReadyUpdateRequest) returns (ReadyEmptyResponse) {}
+}
+
+message ReadyGetRequest {
+  string id = 1;
+}
+
+message ReadyUpdateRequest {
+  bool ready = 1;
+}
+
+message ReadyGetResponse {
+  bool ready = 1;
+}
+
+message ReadyEmptyResponse {
+}
+

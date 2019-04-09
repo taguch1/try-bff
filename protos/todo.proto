@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package proto;
+
+service Todo {
+  rpc Save (TodoSaveRequest) returns (TodoResponse) {}
+  rpc Get (TodoGetRequest) returns (TodoResponse) {}
+  rpc List (TodoListRequest) returns (TodoListResponse) {}
+  rpc Update (TodoUpdateRequest) returns (TodoResponse) {}
+  rpc Delete (TodoDeleteRequest) returns (TodoEmptyResponse) {}
+}
+
+message TodoSaveRequest {
+  string title = 2;
+}
+message TodoGetRequest {
+  string id = 1;
+}
+message TodoListRequest {
+  string offset = 1;
+  string limit = 2;
+}
+message TodoUpdateRequest {
+  string id = 1;
+  string title = 2;
+}
+
+message TodoDeleteRequest {
+  string id = 1;
+}
+
+message TodoResponse {
+  string id = 1;
+  string title = 2;
+}
+
+message TodoListResponse {
+  repeated TodoResponse todos = 1;
+}
+
+message TodoEmptyResponse {
+}
+
