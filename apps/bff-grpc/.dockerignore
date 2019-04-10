@@ -1,0 +1,8 @@
+.circleci
+.git
+.github
+.gitignore
+README.md
+bin
+helm
+logo.jpg
