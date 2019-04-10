@@ -12,6 +12,7 @@ import (
 	"syscall"
 
 	"github.com/taguch1/try-bff/apps/bff-grpc/application"
+	"github.com/taguch1/try-bff/apps/bff-grpc/infrastructure/grpc"
 	"github.com/taguch1/try-bff/apps/bff-grpc/interfaces/handler"
 	"github.com/taguch1/try-bff/apps/bff-grpc/interfaces/router"
 )
@@ -44,7 +45,9 @@ func main() {
 
 func newServer(ctx context.Context) *http.Server {
 
-	todoApp := application.NewTodo()
+	todoService, _ := grpc.NewTodoService()
+
+	todoApp := application.NewTodo(todoService)
 	healthHandler := handler.NewHealth()
 	todoHandler := handler.NewTodo(todoApp)
 

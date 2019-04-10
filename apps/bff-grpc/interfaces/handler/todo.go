@@ -50,7 +50,11 @@ func (h *todoImpl) Get(w http.ResponseWriter, r *http.Request) {
 func (h *todoImpl) List(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	req := &model.TodoListRequest{}
-	res, _ := h.todoApp.List(ctx, req)
+	res, err := h.todoApp.List(ctx, req)
+	if err != nil {
+		handleError(w, r, err)
+		return
+	}
 	resJSON, _ := json.Marshal(res)
 	w.WriteHeader(http.StatusOK)
 	w.Write(resJSON)
