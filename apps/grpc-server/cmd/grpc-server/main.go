@@ -33,22 +33,24 @@ func main() {
 	}
 
 	ctx := context.Background()
-	healthServer := health.NewServer()
-	todoApp := application.NewTodoApp()
-	gPRCRouter := router.NewGPRCRouter(healthServer, todoApp)
-
-	startServers(ctx, gPRCRouter)
+	gPRCRouter := newServer(ctx)
+	startServer(ctx, gPRCRouter)
 
 	quitCh := make(chan os.Signal)
 	signal.Notify(quitCh, syscall.SIGINT, syscall.SIGTERM)
 	<-quitCh
 
-	shutdownServers(ctx, gPRCRouter)
-
+	shutdownServer(ctx, gPRCRouter)
 }
 
-func startServers(ctx context.Context, gPRCRouter *grpc.Server) {
+func newServer(ctx context.Context) *grpc.Server {
+	healthServer := health.NewServer()
+	todoApp := application.NewTodoApp()
+	gPRCRouter := router.NewGPRCRouter(healthServer, todoApp)
+	return gPRCRouter
+}
 
+func startServer(ctx context.Context, gPRCRouter *grpc.Server) {
 	// gRPC server
 	lis, err := net.Listen("tcp", grpcAddress)
 	if err != nil {
@@ -62,7 +64,14 @@ func startServers(ctx context.Context, gPRCRouter *grpc.Server) {
 	}()
 }
 
-func shutdownServers(ctx context.Context, gPRCRouter *grpc.Server) {
+func shutdownServer(ctx context.Context, gPRCRouter *grpc.Server) {
+
+	//TODO
+	// - Readinessチェックをフラグで制御
+	// 1. unreadyにする
+	// 2. ReadinessProbeの(failureThreshold * periodSeconds) + バッファ分待つ
+	// 3. ReadinessチェックでPodが外れてからシャットダウン処理をする
+
 	var wg sync.WaitGroup
 	wg.Add(1)
 

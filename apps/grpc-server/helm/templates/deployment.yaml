@@ -31,6 +31,8 @@ spec:
             exec:
               command: ["/bin/grpc_health_probe", "-addr=:50051"]
             initialDelaySeconds: 5
+            failureThreshold: 2
+            periodSeconds: 3
           livenessProbe:
             exec:
               command: ["/bin/grpc_health_probe", "-addr=:50051"]

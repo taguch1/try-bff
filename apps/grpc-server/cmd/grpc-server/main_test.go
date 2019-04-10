@@ -6,10 +6,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestStartServers(t *testing.T) {
+func TestNewServer_Success(t *testing.T) {
 	assert.True(t, true)
 }
 
-func TestShutDownServers(t *testing.T) {
+func TestStartServer_Success(t *testing.T) {
+	assert.True(t, true)
+}
+
+func TestShutDownServer_Success(t *testing.T) {
 	assert.True(t, true)
 }
