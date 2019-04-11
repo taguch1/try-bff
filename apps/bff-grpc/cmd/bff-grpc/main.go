@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -13,6 +12,7 @@ import (
 
 	"github.com/taguch1/try-bff/apps/bff-grpc/application"
 	"github.com/taguch1/try-bff/apps/bff-grpc/infrastructure/grpc"
+	"github.com/taguch1/try-bff/apps/bff-grpc/infrastructure/log"
 	"github.com/taguch1/try-bff/apps/bff-grpc/interfaces/handler"
 	"github.com/taguch1/try-bff/apps/bff-grpc/interfaces/router"
 )
@@ -24,6 +24,9 @@ const (
 
 var revision string
 
+func init() {
+	log.Setup()
+}
 func main() {
 	flag.Parse()
 	args := flag.Args()
@@ -34,12 +37,15 @@ func main() {
 
 	ctx := context.Background()
 	httpServer := newServer(ctx)
+
+	log.Info(ctx, "start http server")
 	startServer(ctx, newServer(ctx))
 
 	quitCh := make(chan os.Signal)
 	signal.Notify(quitCh, syscall.SIGINT, syscall.SIGTERM)
 	<-quitCh
 
+	log.Info(ctx, "shutdown http server")
 	shutdownServer(ctx, httpServer)
 }
 
@@ -64,7 +70,7 @@ func startServer(ctx context.Context, httpServer *http.Server) {
 	// http server
 	go func() {
 		if err := httpServer.ListenAndServe(); err != nil {
-			log.Fatalf("error http server start %s", err)
+			log.Fatalf(ctx, "failed to start the http server  %s", err)
 		}
 	}()
 }
@@ -81,7 +87,7 @@ func shutdownServer(ctx context.Context, httpServer *http.Server) {
 	wg.Add(1)
 	go func() {
 		if err := httpServer.Shutdown(ctx); err != nil {
-			log.Print(err)
+			log.Errorf(ctx, "failed to shutdown the http server: %s", err)
 		}
 		wg.Done()
 	}()
