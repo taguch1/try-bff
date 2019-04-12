@@ -5,7 +5,12 @@ RUN apt-get update && apt-get install -y build-essential --no-install-recommends
 RUN mkdir -p /src
 WORKDIR /src
 
-# cache
+## dowload entrykit
+ENV ENTRYKIT_VERSION=0.4.0
+RUN curl -fsL https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz | \
+  tar xfz - -C /usr/local/bin/
+
+# build app
 ADD go.mod .
 VOLUME /go/pkg/mod
 COPY . .
@@ -17,5 +22,9 @@ RUN make install PREFIX=/usr/local INSTALL_BIN=${INSTALL_BIN:-app}
 FROM alpine:3.9.2
 WORKDIR /app
 COPY --from=build-env /usr/local/bin/app /app/server
+COPY --from=build-env /usr/local/bin//entrykit /usr/local/bin/entrykit
+RUN entrykit --symlink
 COPY config config
-CMD ["render", "/app/config/*.json", "--", "/app/server"]
+RUN echo -e '#!/bin/sh\nexec /usr/local/bin/render $(find /app/config/ -name \*.json) "$@"' > /render.sh  && chmod +x /render.sh
+
+CMD ["/render.sh", "--", "/app/server"]
