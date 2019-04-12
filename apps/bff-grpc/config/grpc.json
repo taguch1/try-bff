@@ -1,0 +1,4 @@
+{
+  "targetAddress": "localhost:50051",
+  "timeoutMillis": 3000
+}

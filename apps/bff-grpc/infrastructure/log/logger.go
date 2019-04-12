@@ -72,12 +72,12 @@ func Errorf(ctx context.Context, format string, a ...interface{}) {
 
 // Fatal Fatal
 func Fatal(ctx context.Context, msg string) {
-	log(ctx, zap.InfoLevel, msg)
+	log(ctx, zap.FatalLevel, msg)
 }
 
 // Fatalf Fatalf
 func Fatalf(ctx context.Context, format string, a ...interface{}) {
-	log(ctx, zap.InfoLevel, fmt.Sprintf(format, a...))
+	log(ctx, zap.FatalLevel, fmt.Sprintf(format, a...))
 }
 
 // log

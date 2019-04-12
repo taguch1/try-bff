@@ -17,6 +17,5 @@ RUN make install PREFIX=/usr/local INSTALL_BIN=${INSTALL_BIN:-app}
 FROM alpine:3.9.2
 WORKDIR /app
 COPY --from=build-env /usr/local/bin/app /app/server
-
-# TODO render config
-CMD ["/app/server"]
+COPY config config
+CMD ["render", "/app/config/*.json", "--", "/app/server"]

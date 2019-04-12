@@ -21,12 +21,12 @@ type todoSrviceImpl struct {
 }
 
 // NewTodoService todo service constructor
-func NewTodoService() (service.Todo, error) {
-	conn, err := grpc.Dial(targetAddress, grpc.WithInsecure())
+func NewTodoService(config *Config) (service.Todo, error) {
+	conn, err := grpc.Dial(config.TargetAddress, grpc.WithInsecure())
 	if err != nil {
 		return nil, err
 	}
-	timeout := time.Duration(timeoutMillis) * time.Millisecond
+	timeout := time.Duration(config.TimeoutMillis) * time.Millisecond
 	todoClient := pb.NewTodoClient(conn)
 	return &todoSrviceImpl{timeout, todoClient}, nil
 }

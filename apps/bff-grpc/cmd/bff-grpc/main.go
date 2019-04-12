@@ -51,8 +51,12 @@ func main() {
 
 func newServer(ctx context.Context) *http.Server {
 
-	todoService, _ := grpc.NewTodoService()
+	grpcConfig, err := grpc.NewConf(grpc.ConfFileName)
+	if err != nil {
+		log.Fatalf(ctx, "failed to load grpc config. err:%s", err)
+	}
 
+	todoService, _ := grpc.NewTodoService(grpcConfig)
 	todoApp := application.NewTodo(todoService)
 	healthHandler := handler.NewHealth()
 	todoHandler := handler.NewTodo(todoApp)
