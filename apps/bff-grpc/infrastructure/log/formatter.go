@@ -22,6 +22,10 @@ func NewLogFormatter(l *zap.Logger) middleware.LogFormatter {
 
 // NewLogEntry LogEntry
 func (f *logFormatter) NewLogEntry(r *http.Request) middleware.LogEntry {
+	// TODO: fix hardcode
+	if r.RequestURI == "/health" {
+		return &logSkipEntry{}
+	}
 
 	entry := &logEntry{f.logger}
 
@@ -63,3 +67,8 @@ func (l *logEntry) Panic(v interface{}, stack []byte) {
 		zap.String("panic", fmt.Sprintf("%+v", v)),
 	}...).Panic("panic")
 }
+
+type logSkipEntry struct{}
+
+func (l *logSkipEntry) Write(status, bytes int, elapsed time.Duration) {}
+func (l *logSkipEntry) Panic(v interface{}, stack []byte)              {}
