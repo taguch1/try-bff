@@ -42,8 +42,37 @@ kubectl port-forward service/bff-grpc 1323:1323
 
 ```shell
 # save
-# get
-# list
-# udpate
-# delete
+```shell
+curl -v -XPOST -d @ http://localhost:1323/todos <<EOM
+{
+  "id": "1",
+  "title": "TitleA"
+}
+EOM
 ```
+
+# get
+```shell
+curl -v http://localhost:1323/todos/id
+```
+
+# list
+
+```shell
+curl -v http://localhost:1323/todos
+```
+
+# update
+```shell
+curl -v -XPATCH -d @ http://localhost:1323/todos/1 <<EOM
+{
+  "title": "Titlea"
+}
+EOM
+```
+
+# delete
+```shell
+curl -v -XDELETE -d @ http://localhost:1323/todos/1
+```
+

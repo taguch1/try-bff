@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/go-chi/chi"
+	"github.com/go-chi/render"
 	"github.com/taguch1/try-bff/apps/bff-grpc/application"
 	"github.com/taguch1/try-bff/apps/bff-grpc/domain/model"
 )
@@ -26,12 +28,16 @@ func NewTodo(todoApp application.Todo) Todo {
 	return &todoImpl{todoApp}
 }
 
-// TODO: render
-// TODO: bind
+const todoIDParam string = "id"
 
+// TODO: render
 func (h *todoImpl) Save(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	req := &model.TodoSaveRequest{}
+	if err := render.Bind(r, req); err != nil {
+		handleError(w, r, err)
+		return
+	}
 	res, _ := h.todoApp.Save(ctx, req)
 	resJSON, _ := json.Marshal(res)
 	w.WriteHeader(http.StatusCreated)
@@ -40,7 +46,12 @@ func (h *todoImpl) Save(w http.ResponseWriter, r *http.Request) {
 
 func (h *todoImpl) Get(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	req := &model.TodoGetRequest{}
+	id := chi.URLParam(r, todoIDParam)
+	req := &model.TodoGetRequest{ID: id}
+	if err := render.Bind(r, req); err != nil {
+		handleError(w, r, err)
+		return
+	}
 	res, _ := h.todoApp.Get(ctx, req)
 	resJSON, _ := json.Marshal(res)
 	w.WriteHeader(http.StatusOK)
@@ -49,7 +60,12 @@ func (h *todoImpl) Get(w http.ResponseWriter, r *http.Request) {
 
 func (h *todoImpl) List(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+
 	req := &model.TodoListRequest{}
+	if err := render.Bind(r, req); err != nil {
+		handleError(w, r, err)
+		return
+	}
 	res, err := h.todoApp.List(ctx, req)
 	if err != nil {
 		handleError(w, r, err)
@@ -62,7 +78,12 @@ func (h *todoImpl) List(w http.ResponseWriter, r *http.Request) {
 
 func (h *todoImpl) Update(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	req := &model.TodoUpdateRequest{}
+	id := chi.URLParam(r, todoIDParam)
+	req := &model.TodoUpdateRequest{ID: id}
+	if err := render.Bind(r, req); err != nil {
+		handleError(w, r, err)
+		return
+	}
 	res, _ := h.todoApp.Update(ctx, req)
 	resJSON, _ := json.Marshal(res)
 	w.WriteHeader(http.StatusOK)
@@ -71,7 +92,13 @@ func (h *todoImpl) Update(w http.ResponseWriter, r *http.Request) {
 
 func (h *todoImpl) Delete(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	req := &model.TodoDeleteRequest{}
+
+	id := chi.URLParam(r, todoIDParam)
+	req := &model.TodoDeleteRequest{ID: id}
+	if err := render.Bind(r, req); err != nil {
+		handleError(w, r, err)
+		return
+	}
 	h.todoApp.Delete(ctx, req)
 	w.WriteHeader(http.StatusNoContent)
 }

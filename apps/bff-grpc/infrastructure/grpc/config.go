@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 )
 
+// Config grpc config
 type Config struct {
 	TargetAddress string `json:"targetAddress"`
 	TimeoutMillis int    `json:"timeoutMillis"`
