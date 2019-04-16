@@ -35,7 +35,7 @@ func NewGPRCRouter(
 			return true
 		}),
 	}
-	grpc_zap.ReplaceGrpcLogger(log.Logger)
+	log.ReplaceGrpcLogger(log.Logger)
 
 	s := grpc.NewServer(
 		grpc_middleware.WithUnaryServerChain(

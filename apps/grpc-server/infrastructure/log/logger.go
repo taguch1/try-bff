@@ -19,7 +19,6 @@ var (
 // Setup Setup
 func Setup() {
 	once.Do(func() {
-		// TODO: load onfig/log.json
 		config := zap.NewProductionConfig()
 		config.OutputPaths = []string{"stdout"}
 		l, _ := config.Build(
