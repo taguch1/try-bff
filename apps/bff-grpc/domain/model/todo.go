@@ -1,5 +1,9 @@
 package model
 
+import (
+	"net/http"
+)
+
 // Todo todo
 type Todo struct {
 	ID    string `json:"id"`
@@ -62,4 +66,29 @@ func NewTodoListResponse(todos []*Todo) *TodoListResponse {
 	return &TodoListResponse{
 		Todos: todoList,
 	}
+}
+
+// Bind validate request
+func (req *TodoSaveRequest) Bind(r *http.Request) error {
+	return nil
+}
+
+// Bind validate request
+func (req *TodoGetRequest) Bind(r *http.Request) error {
+	return nil
+}
+
+// Bind validate request
+func (req *TodoListRequest) Bind(r *http.Request) error {
+	return nil
+}
+
+// Bind validate request
+func (req *TodoUpdateRequest) Bind(r *http.Request) error {
+	return nil
+}
+
+// Bind validate request
+func (req *TodoDeleteRequest) Bind(r *http.Request) error {
+	return nil
 }
