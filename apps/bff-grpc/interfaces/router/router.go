@@ -24,7 +24,8 @@ func NewHTTPRouter(
 	r.Route("/todos", func(r chi.Router) {
 		r.Post("/", todoHandler.Save)
 		r.Get("/", todoHandler.List)
-		r.Route("/{id}", func(r chi.Router) {
+		r.Route("/{todoID}", func(r chi.Router) {
+			r.Use(todoHandler.Ctx)
 			r.Get("/", todoHandler.Get)
 			r.Patch("/", todoHandler.Update)
 			r.Delete("/", todoHandler.Delete)
