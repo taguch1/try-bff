@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"log"
 	"net"
 	"os"
 	"os/signal"
@@ -12,6 +11,7 @@ import (
 	"syscall"
 
 	"github.com/taguch1/try-bff/apps/grpc-server/application"
+	"github.com/taguch1/try-bff/apps/grpc-server/infrastructure/log"
 	"github.com/taguch1/try-bff/apps/grpc-server/interfaces/router"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
@@ -24,6 +24,10 @@ const (
 
 var revision string
 
+func init() {
+	log.Setup()
+}
+
 func main() {
 	flag.Parse()
 	args := flag.Args()
@@ -34,12 +38,15 @@ func main() {
 
 	ctx := context.Background()
 	gPRCRouter := newServer(ctx)
+
+	log.Info(ctx, "start grpc server")
 	startServer(ctx, gPRCRouter)
 
 	quitCh := make(chan os.Signal)
 	signal.Notify(quitCh, syscall.SIGINT, syscall.SIGTERM)
 	<-quitCh
 
+	log.Info(ctx, "shutdown grpc server")
 	shutdownServer(ctx, gPRCRouter)
 }
 
@@ -54,12 +61,12 @@ func startServer(ctx context.Context, gPRCRouter *grpc.Server) {
 	// gRPC server
 	lis, err := net.Listen("tcp", grpcAddress)
 	if err != nil {
-		log.Fatalf("error grpc server start %s", err)
+		log.Fatalf(ctx, "failed to listen grpc server port  %s", err)
 	}
 
 	go func() {
 		if err := gPRCRouter.Serve(lis); err != nil {
-			log.Printf("shutting down the grpc server %s", err)
+			log.Fatalf(ctx, "failed to start the grpc server  %s", err)
 		}
 	}()
 }
