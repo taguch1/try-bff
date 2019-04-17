@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
@@ -30,7 +31,11 @@ func NewTodo(todoApp application.Todo) Todo {
 	return &todoImpl{todoApp}
 }
 
-const todoIDParam string = "todoID"
+const (
+	todoIDParam     string = "todoID"
+	todoOffsetParam string = "offset"
+	todoLimitParam  string = "limit"
+)
 
 type key int
 
@@ -95,12 +100,12 @@ func (h *todoImpl) Get(w http.ResponseWriter, r *http.Request) {
 func (h *todoImpl) List(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	req := &model.TodoListRequest{}
-	if err := render.Bind(r, req); err != nil {
-		handleError(w, r, err)
-		return
+	offset, _ := strconv.ParseInt(chi.URLParam(r, todoOffsetParam), 10, 64)
+	limit, _ := strconv.ParseInt(chi.URLParam(r, todoLimitParam), 10, 64)
+	req := &model.TodoListRequest{
+		Offset: offset,
+		Limit:  limit,
 	}
-
 	res, err := h.todoApp.List(ctx, req)
 	if err != nil {
 		handleError(w, r, err)
