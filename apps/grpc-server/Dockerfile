@@ -26,11 +26,12 @@ RUN make install PREFIX=/usr/local INSTALL_BIN=${INSTALL_BIN:-app}
 #===============================================================
 FROM alpine:3.9.2
 WORKDIR /app
+COPY config config
 COPY --from=build-env /usr/local/bin/app /app/server
 COPY --from=build-env /bin/grpc_health_probe /bin/grpc_health_probe
-COPY --from=build-env /usr/local/bin//entrykit /usr/local/bin/entrykit
-RUN entrykit --symlink
-COPY config config
-RUN echo -e '#!/bin/sh\nexec /usr/local/bin/render $(find /app/config/ -name \*.json) "$@"' > /render.sh  && chmod +x /render.sh
+COPY --from=build-env /usr/local/bin/entrykit /usr/local/bin/entrykit
+RUN entrykit --symlink \
+  && echo -e '#!/bin/sh\ntemplate_dir=${TEMPLATE_DIR:-/app/config/}\ntemplates="$(find ${template_dir} -type f -name '*tmpl' | sed -e 's/.tmpl//g')"\nexec /usr/local/bin/render ${templates} "$@"' > /render.sh \
+  && chmod +x /render.sh
 
 CMD ["/render.sh", "--", "/app/server"]
