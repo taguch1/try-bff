@@ -18,8 +18,7 @@ backends for frontends (with gRPC)
 deploy to docker-for-desktop
 
 ```shell
-make docker-build
-make helm-apply
+make
 ```
 
 deploy check

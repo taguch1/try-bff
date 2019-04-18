@@ -25,3 +25,7 @@ k8s_deployment       := $(name)
 include .make/docker.mk
 include .make/helm.mk
 
+depoly: docker-build helm-apply
+
+.PHONY: deploy
+.DEFAULT_GOAL := deploy

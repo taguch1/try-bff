@@ -36,4 +36,7 @@ protoc:
 run-local:
 	docker run -it --rm -p50051:50051 $(image_repo):latest
 
-.PHONY: protoc run-local
+deploy: docker-build helm-apply
+
+.PHONY: protoc run-local deploy
+.DEFAULT_GOAL := deploy
