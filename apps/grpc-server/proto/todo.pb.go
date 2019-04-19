@@ -142,10 +142,10 @@ func (m *TodoListRequest) GetOffset() int64 {
 }
 
 func (m *TodoListRequest) GetLimit() int64 {
-	if m != nil {
-		return m.Limit
+	if m == nil || m.Limit <= 0 {
+		return 10
 	}
-	return 0
+	return m.Limit
 }
 
 type TodoUpdateRequest struct {

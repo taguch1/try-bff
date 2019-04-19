@@ -39,7 +39,8 @@ func (app *todoImpl) Get(ctx context.Context, req *pb.TodoGetRequest) (*pb.TodoR
 }
 
 func (app *todoImpl) List(ctx context.Context, req *pb.TodoListRequest) (*pb.TodoListResponse, error) {
-	rows, err := app.todoRepo.List(ctx, req.Offset, req.Limit)
+
+	rows, err := app.todoRepo.List(ctx, req.GetOffset(), req.GetLimit())
 	if err != nil {
 		return nil, err
 	}
