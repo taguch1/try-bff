@@ -21,7 +21,7 @@ USE `rdbms` ;
 -- Table `rdbms`.`todo`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `rdbms`.`todo` (
-  `id` VARCHAR(128) NOT NULL,
+  `id` CHAR(20) NOT NULL,
   `title` VARCHAR(255) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
