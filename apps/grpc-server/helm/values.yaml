@@ -32,3 +32,8 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+db:
+  connectionName: tcp(rdbms.default.svc.cluster.local:3306)
+  user: "root"
+  password: "rdbms-password"

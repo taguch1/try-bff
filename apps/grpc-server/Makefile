@@ -38,5 +38,8 @@ run-local:
 
 deploy: docker-build helm-apply
 
-.PHONY: protoc run-local deploy
+forward:
+	kubectl port-forward service/grpc-server 50051:50051
+
+.PHONY: protoc run-local deploy forward
 .DEFAULT_GOAL := deploy

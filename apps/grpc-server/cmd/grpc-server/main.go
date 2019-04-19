@@ -12,6 +12,8 @@ import (
 
 	"github.com/taguch1/try-bff/apps/grpc-server/application"
 	"github.com/taguch1/try-bff/apps/grpc-server/infrastructure/log"
+	"github.com/taguch1/try-bff/apps/grpc-server/infrastructure/mysql"
+	"github.com/taguch1/try-bff/apps/grpc-server/infrastructure/persistence"
 	"github.com/taguch1/try-bff/apps/grpc-server/interfaces/router"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
@@ -52,7 +54,16 @@ func main() {
 
 func newServer(ctx context.Context) *grpc.Server {
 	healthServer := health.NewServer()
-	todoApp := application.NewTodoApp()
+	mysqlConfig, err := mysql.NewConf(mysql.ConfFileName)
+	if err != nil {
+		log.Fatalf(ctx, "failed to load mysql config  %s", err)
+	}
+	db, err := mysql.Open(mysqlConfig)
+	if err != nil {
+		log.Fatalf(ctx, "failed to open mysql connection  %s", err)
+	}
+	todoRepo := persistence.NewTodo(db)
+	todoApp := application.NewTodo(todoRepo)
 	gPRCRouter := router.NewGPRCRouter(healthServer, todoApp)
 	return gPRCRouter
 }

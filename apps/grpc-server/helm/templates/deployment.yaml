@@ -37,6 +37,15 @@ spec:
             exec:
               command: ["/bin/grpc_health_probe", "-addr=:50051"]
             initialDelaySeconds: 10
+          env:
+          - name: APP_ENVIRONMENT
+            value: "{{ .Values.env }}"
+          - name: DATABASE_CONNECTION_NAME
+            value: "{{ .Values.db.connectionName }}"
+          - name: DATABASE_USER
+            value: "{{ .Values.db.user }}"
+          - name: DATABASE_PASSWORD
+            value: "{{ .Values.db.password }}"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
