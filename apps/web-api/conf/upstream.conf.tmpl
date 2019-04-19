@@ -1,9 +1,4 @@
-upstream bff-grpc {
-    server bff-grpc.default.svc.cluster.local:1323;
+upstream bff-server {
+    server bff-server.default.svc.cluster.local:1323;
     keepalive 128;
 }
-#upstream bff-http {
-#    server bff-http.default.svc.cluster.local:1323;
-#    keepalive 128;
-#}
-

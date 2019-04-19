@@ -2,22 +2,25 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "web-api.fullname" . }}
-  labels:
-    app.kubernetes.io/name: {{ include "web-api.name" . }}
-    helm.sh/chart: {{ include "web-api.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "web-api.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      app: {{ template "web-api.name" . }}
+      tier: backend
+      component: nginx
+      env: {{ .Values.env }}
+      heritage: {{ .Release.Service }}
+      namespace: {{ .Release.Namespace }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "web-api.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        app: {{ template "web-api.name" . }}
+        tier: backend
+        component: nginx
+        env: {{ .Values.env }}
+        heritage: {{ .Release.Service }}
+        namespace: {{ .Release.Namespace }}
     spec:
       containers:
         - name: {{ .Chart.Name }}

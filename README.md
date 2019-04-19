@@ -4,43 +4,34 @@
 
 今までの総まとめとして BFF 環境の Mock を作成する
 
-- Backends For Frontends が HttpClient で実装できる場合
+- Backends For Frontends が RESTful, gRPC, GraphQL のClientとして実装する
 
-![bff-http](https://raw.githubusercontent.com/taguch1/try-bff/images/readme/bff-http.png?token=AEy1_j9jIPsrv6bzAq6NewdgcdcE3Yqwks5cqr1RwA%3D%3D)
-
-```mermaid
-sequenceDiagram
-    frondends(js)->>LB(nginx):https
-    LB(nginx)->>BFF:http
-    BFF->>APIServer:http(REST)
-    APIServer->>AttchedResourece:tcp(mysql)
-```
-
-
-- Backends For Frontends が GRPClient で実装できる場合
-
-![bff-grpc](https://raw.githubusercontent.com/taguch1/try-bff/images/readme/bff-grpc.png?token=AEy1_nlXpcXPVQ3rGXdq5iF2W14FCzteks5cqrz3wA%3D%3D)
+![bff](https://raw.githubusercontent.com/taguch1/try-bff/images/readme/bff.png)
 
 ```mermaid
 sequenceDiagram
-    frondends(js)->>LB(nginx):https
-    LB(nginx)->>BFF:http
-    BFF->>APIServer:GRPC
-    APIServer->>AttchedResourece:tcp(mysql)
-```
+    participant js   as frondends(js)
+    participant lb   as LB(nginx)
+    participant bff  as BFF
+    participant grpc as gRPCServer
+    participant rest as RESTAPIServer
+    participant gql  as GraphQLAPIServer
+    participant rdb  as AttchedResourece
 
-- Backends For Frontends が 両方混在する場合
+    js->>lb:https
+    lb->>bff:http
+    bff->>grpc:gPRC
+    grpc->>rdb:tcp(mysql)
 
-![bff-mixed](https://raw.githubusercontent.com/taguch1/try-bff/images/readme/bff-mixed.png?token=AEy1_t0e8-X3qJ1Cho2GnrGC4Vlmzt92ks5cqr0cwA%3D%3D)
+    js->>lb:https
+    lb->>bff:http
+    bff->>rest:http
+    rest->>rdb:tcp(mysql)
 
-```mermaid
-sequenceDiagram
-    frondends(js)->>LB(nginx):https
-    LB(nginx)->>BFF:http
-    BFF->>GRPCGateWay:REST
-    GRPCGateWay->APIServer:GRPC
-    BFF->>APIServer:GRPC
-    APIServer->>AttchedResourece:tcp(mysql)
+    js->>lb:https
+    lb->>bff:http
+    bff->>gql:http
+    gql->>rdb:tcp(mysql)
 ```
 
 ## タスク
@@ -58,10 +49,10 @@ sequenceDiagram
 ### 各モジュール作成
 
 - [frondend](https://github.com/taguch1/try-bff/tree/master/apps/frondend)
-- [bff-grpc](https://github.com/taguch1/try-bff/tree/master/apps/bff-grpc)
+- [bff-server](https://github.com/taguch1/try-bff/tree/master/apps/bff-server)
+- [rest-server](https://github.com/taguch1/try-bff/tree/master/apps/rest-server)
 - [grpc-server](https://github.com/taguch1/try-bff/tree/master/apps/grpc-server)
-- [bff-http](https://github.com/taguch1/try-bff/tree/master/apps/bff-http)
-- [grpc-gateway](https://github.com/taguch1/try-bff/tree/master/apps/grpc-gateway)
+- [graphql-server](https://github.com/taguch1/try-bff/tree/master/apps/graphql-server)
 
 ### Docker イメージ
 
@@ -92,3 +83,5 @@ CircleCIがデブロイ先(docker for mac)まで届かないので省略
 
 - CronJob
 - k8sAPIを使ったシンプルなJobManager(シーケンシャルにJobを実行するやつ)
+
+

@@ -10,7 +10,7 @@ TAG_OPTION    := local-latest
 
 # Const
 #===============================================================
-name                 := grpc-server
+name                 := bff-server
 bin_dir              := bin
 image_repo           := taguch1/$(name)
 proto_dir            := ../../protos
@@ -34,12 +34,12 @@ protoc:
 	protoc -I $(proto_dir) --go_out=plugins=grpc:./proto $(proto_dir)/*.proto
 
 run-local:
-	docker run -it --rm -p50051:50051 $(image_repo):latest
+	docker run -it --rm -p1323:1323 $(image_repo):latest
 
 deploy: docker-build helm-apply
 
 forward:
-	kubectl port-forward service/$(name) 50051:50051
+	kubectl port-forward service/$(name) 1323:1323
 
 .PHONY: protoc run-local deploy forward
 .DEFAULT_GOAL := deploy

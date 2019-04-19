@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package proto;
+
+service User {
+  rpc Save (UserSaveRequest) returns (UserResponse) {}
+  rpc Get (UserGetRequest) returns (UserResponse) {}
+  rpc List (UserListRequest) returns (UserListResponse) {}
+  rpc Update (UserUpdateRequest) returns (UserResponse) {}
+  rpc Delete (UserDeleteRequest) returns (UserEmptyResponse) {}
+}
+
+message UserSaveRequest {
+  string name = 1;
+  string password = 2;
+}
+message UserGetRequest {
+  string id = 1;
+}
+message UserListRequest {
+  int64 offset = 1;
+  int64 limit = 2;
+}
+
+message UserUpdateRequest {
+  string id = 1;
+  string name = 2;
+  string password = 2;
+}
+
+message UserDeleteRequest {
+  string id = 1;
+}
+
+message UserResponse {
+  string id = 1;
+  string name = 2;
+  string password = 2;
+}
+
+message UserListResponse {
+  repeated UserResponse Users = 1;
+}
+
+message UserEmptyResponse {
+}
+

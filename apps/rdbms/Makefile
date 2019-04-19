@@ -35,7 +35,7 @@ load-testdata: .change-cluster
 deploy: helm-apply migrate load-testdata
 
 forward:
-	kubectl port-forward service/rdbms 3306:3306
+	kubectl port-forward service/$(name) 3306:3306
 
 .PHONY: migrate load-testdata deploy forward
 .DEFAULT_GOAL := deploy
