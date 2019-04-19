@@ -52,7 +52,7 @@ sequenceDiagram
 - [bff-server](https://github.com/taguch1/try-bff/tree/master/apps/bff-server)
 - [rest-server](https://github.com/taguch1/try-bff/tree/master/apps/rest-server)
 - [grpc-server](https://github.com/taguch1/try-bff/tree/master/apps/grpc-server)
-- [rest-server](https://github.com/taguch1/try-bff/tree/master/apps/rest-server)
+- [graphql-server](https://github.com/taguch1/try-bff/tree/master/apps/graphql-server)
 
 ### Docker イメージ
 

@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package proto;
+
+service Profile {
+  rpc Save (ProfileSaveRequest) returns (ProfileResponse) {}
+  rpc Get (ProfileGetRequest) returns (ProfileResponse) {}
+  rpc List (ProfileListRequest) returns (ProfileListResponse) {}
+  rpc Update (ProfileUpdateRequest) returns (ProfileResponse) {}
+  rpc Delete (ProfileDeleteRequest) returns (ProfileEmptyResponse) {}
+}
+
+message ProfileSaveRequest {
+  string lastname = 1;
+  string firstname = 2;
+  string age = 3;
+}
+
+message ProfileGetRequest {
+  string id = 1;
+}
+
+message ProfileListRequest {
+  int64 offset = 1;
+  int64 limit = 2;
+}
+
+message ProfileUpdateRequest {
+  string id = 1;
+  string title = 2;
+}
+
+message ProfileDeleteRequest {
+  string id = 1;
+}
+
+message ProfileResponse {
+  string id = 1;
+  string lastname = 2;
+  string firstname = 3;
+  string age = 4;
+}
+
+message ProfileListResponse {
+  repeated ProfileResponse Profiles = 1;
+}
+
+message ProfileEmptyResponse {
+}
+
