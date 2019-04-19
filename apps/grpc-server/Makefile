@@ -36,4 +36,10 @@ protoc:
 run-local:
 	docker run -it --rm -p50051:50051 $(image_repo):latest
 
-.PHONY: protoc run-local
+deploy: docker-build helm-apply
+
+forward:
+	kubectl port-forward service/grpc-server 50051:50051
+
+.PHONY: protoc run-local deploy forward
+.DEFAULT_GOAL := deploy

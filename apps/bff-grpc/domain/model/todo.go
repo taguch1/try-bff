@@ -7,7 +7,7 @@ import (
 // Todo todo
 type Todo struct {
 	ID    string `json:"id"`
-	Title string `json:"titile"`
+	Title string `json:"title"`
 }
 
 // TodoSaveRequest save request
@@ -29,7 +29,7 @@ type TodoListRequest struct {
 // TodoUpdateRequest update request
 type TodoUpdateRequest struct {
 	ID    string `json:"id"`
-	Title string `json:"titile"`
+	Title string `json:"title"`
 }
 
 // TodoDeleteRequest delete request
@@ -40,7 +40,7 @@ type TodoDeleteRequest struct {
 // TodoResponse response
 type TodoResponse struct {
 	ID    string `json:"id"`
-	Title string `json:"titile"`
+	Title string `json:"title"`
 }
 
 // TodoListResponse list response

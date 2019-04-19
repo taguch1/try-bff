@@ -10,10 +10,8 @@ TAG_OPTION    := local-latest
 
 # Const
 #===============================================================
-name                 := bff-grpc
+name                 := rdbms
 bin_dir              := bin
-image_repo           := taguch1/$(name)
-proto_dir            := ../../protos
 
 helm_name            := $(name)
 helm_apply_options   :=
@@ -24,22 +22,20 @@ k8s_deployment       := $(name)
 
 # Include
 #===============================================================
-include .make/build.mk
-include .make/docker.mk
 include .make/helm.mk
 
 # Task
 #===============================================================
-protoc:
-	protoc -I $(proto_dir) --go_out=plugins=grpc:./proto $(proto_dir)/*.proto
+migrate: .change-cluster
+	kubectl exec -it $$(kubectl get po -l app=rdbms --no-headers  -o "custom-columns=NAME:.metadata.name") -- mysql -uroot -prdbms-password -e "$$(cat ./scripts/rdbms.sql)"
 
-run-local:
-	docker run -it --rm -p1323:1323 $(image_repo):latest
+load-testdata: .change-cluster
+	kubectl exec -it $$(kubectl get po -l app=rdbms --no-headers  -o "custom-columns=NAME:.metadata.name") -- mysql -uroot -prdbms-password -Drdbms -e "$$(cat scripts/testdata.sql)"
 
-deploy: docker-build helm-apply
+deploy: helm-apply migrate load-testdata
 
 forward:
-	kubectl port-forward service/bff-grpc 1323:1323
+	kubectl port-forward service/rdbms 3306:3306
 
-.PHONY: protoc run-local deploy forward
+.PHONY: migrate load-testdata deploy forward
 .DEFAULT_GOAL := deploy

@@ -25,3 +25,10 @@ k8s_deployment       := $(name)
 include .make/docker.mk
 include .make/helm.mk
 
+depoly: docker-build helm-apply
+
+forward:
+	kubectl port-forward service/web-api 8080:80
+
+.PHONY: deploy forward
+.DEFAULT_GOAL := deploy

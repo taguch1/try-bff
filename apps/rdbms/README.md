@@ -1,17 +1,15 @@
 
-# grpc-server
+# rdbms
 
 ====
 
-gRPC mock server
+mysql
 
 ## Requirement
 
-- [Docker Desktop for Mac](https://hub.docker.com/editions/community/docker-ce-desktop-mac)
 - kubectl(client:v1.11.9, server:v1.10.11
 - [kubectx](https://github.com/ahmetb/kubectx)
 - helm(client:v2.12.3, server:v2.12.3)
-- go v1.12.0
 
 ## Install
 
@@ -24,18 +22,17 @@ make
 deploy check
 
 ```shell
-kubectl get service grpc-server
-> NAME          TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)     AGE
-> grpc-server   ClusterIP   10.106.35.28   <none>        50051/TCP   17h
+kubectl get service rdbms
+> NAME      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+> rdbms     ClusterIP   10.105.186.42   <none>        3306/TCP   16s
 
-kubectl get deploy
-> NAME          DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
-> grpc-server   2         2         2            2           17h
+kubectl get deploy rdbms
+> NAME      DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+> rdbms     1         1         1            1           40s
 
 kubectl get po
-> NAME                          READY     STATUS    RESTARTS   AGE
-> grpc-server-f98c78d44-cxqch   1/1       Running   0          16h
-> grpc-server-f98c78d44-gz626   1/1       Running   0          16h
+> NAME                           READY     STATUS    RESTARTS   AGE
+> rdbms-698d97d666-6vkkr         1/1       Running   0          56s
 ```
 
 ## Usage
