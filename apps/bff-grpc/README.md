@@ -1,4 +1,3 @@
-
 # bff-grpc
 
 ====
@@ -39,20 +38,16 @@ forward a local port to a port on the cluster ip
 kubectl port-forward service/bff-grpc 1323:1323
 ```
 
-```shell
+````shell
 # save
 ```shell
-curl -v -XPOST -d @ http://localhost:1323/todos <<EOM
-{
-  "id": "1",
-  "title": "TitleA"
-}
-EOM
-```
+ID=$(curl -v -XPOST -H 'Content-Type: application/json' -d '{"title": "TitleA"}' http://localhost:1323/todos | jq -r '.id')
+````
 
 # get
+
 ```shell
-curl -v http://localhost:1323/todos/id
+curl -v "http://localhost:1323/todos/${ID}"
 ```
 
 # list
@@ -62,16 +57,13 @@ curl -v http://localhost:1323/todos
 ```
 
 # update
+
 ```shell
-curl -v -XPATCH -d @ http://localhost:1323/todos/1 <<EOM
-{
-  "title": "Titlea"
-}
-EOM
+curl -XPATCH -v -H 'Content-Type: application/json'  -d '{"title": "TitleA-update"}'  "http://localhost:1323/todos/${ID}"
 ```
 
 # delete
-```shell
-curl -v -XDELETE -d @ http://localhost:1323/todos/1
-```
 
+```shell
+curl -v -XDELETE "http://localhost:1323/todos/${ID}"
+```
