@@ -24,10 +24,17 @@ deploy check
 
 ```shell
 kubectl get service bff-server
+> NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+> bff-server   ClusterIP   10.103.180.57   <none>        1323/TCP   3d
 
 kubectl get deploy bff-server
+> NAME         DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+> bff-server   2         2         2            2           3d
 
-kubectl get po | grep bff-server
+kubectl get po -l app=bff-server
+> NAME                          READY     STATUS    RESTARTS   AGE
+> bff-server-7cd858d4cf-4qrf7   1/1       Running   0          11m
+> bff-server-7cd858d4cf-xrkb2   1/1       Running   0          12m
 ```
 
 ## Usage

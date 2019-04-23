@@ -1,34 +1,44 @@
 # frontend-vue
 
-```
-vue create frontend-vue
-vue add @vue/unit-jest
+====
+
+vue app
+
+## Requirement
+
+- kubectl(client:v1.11.9, server:v1.10.11
+- [kubectx](https://github.com/ahmetb/kubectx)
+- helm(client:v2.12.3, server:v2.12.3)
+
+## Install
+
+deploy to docker-for-desktop
+
+```shell
+make
 ```
 
-## Project setup
-```
-make setup
-```
+deploy check
 
-### Compiles and hot-reloads for development
-```
-make run-local
-```
+```shell
+kubectl get service frontend-vue
+> NAME           TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+> frontend-vue   ClusterIP   10.110.47.187   <none>        80/TCP    57m
 
-### Compiles and minifies for production
-```
-make build
-```
+kubectl get deploy frontend-vue
+> NAME           DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+> frontend-vue   2         2         2            2           57m
 
-### Run your tests
-```
-make test
-```
+kubectl get po -l app=frontend-vue
+> NAME                            READY     STATUS    RESTARTS   AGE
+> frontend-vue-68d8f9b96b-27cjf   1/1       Running   0          52m
+> frontend-vue-68d8f9b96b-hrvkd   1/1       Running   0          52m```
 
-### Lints and fixes files
-```
-make lint
-```
+## Usage
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+forward a local port to a port on the cluster ip
+
+```shell
+make forward
+open localhost:8080
+```

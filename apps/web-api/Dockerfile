@@ -10,10 +10,10 @@ RUN curl -fsL https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT
 FROM nginx:1.15.12-alpine
 EXPOSE 80 443
 
-COPY health /usr/share/nginx/html
-COPY error /usr/share/nginx/html
-COPY conf/ /etc/nginx
-COPY index.html /usr/share/nginx/html
+COPY nginx/health /usr/share/nginx/html
+COPY nginx/error /usr/share/nginx/html
+COPY nginx/conf /etc/nginx
+COPY nginx/index.html /usr/share/nginx/html
 
 ENV TEMPLATE_DIR=/etc/nginx/
 COPY --from=build-env /usr/local/bin/entrykit /usr/local/bin/entrykit
