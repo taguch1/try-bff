@@ -1,0 +1,21 @@
+daemon off;
+worker_processes auto;
+error_log stderr notice;
+
+events {
+    worker_connections 1024;
+    multi_accept on;
+}
+
+http {
+    include http.conf;
+
+#    map $http_user_agent $is_unsupported {
+#        default 0;
+#    }
+
+    server {
+        include server.conf;
+        include application.conf;
+    }
+}

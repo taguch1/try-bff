@@ -1,0 +1,52 @@
+listen      80;
+server_name localhost;
+charset     UTF-8;
+
+## enforce ssl
+#if ($http_x_forwarded_proto != https) {
+#    return 301 https://$host$request_uri;
+#}
+
+# error page
+error_page 404             /404.html;
+error_page 500 502 503 504 /50x.html;
+
+location = / {
+    root /usr/share/nginx/html;
+}
+
+location = /404.html {
+    root /usr/share/nginx/html;
+}
+
+location = /50x.html {
+    root /usr/share/nginx/html;
+}
+
+# health check
+location = /health {
+    root /usr/share/nginx/html;
+    log_not_found off;
+    access_log off;
+}
+
+# meta location
+location = /robots.txt {
+    access_log off;
+    add_header Content-Type text/plain;
+    return 200 "User-agent: *\nDisallow: /\n";
+}
+
+location = /favicon.ico {
+    access_log off;
+    root /usr/share/nginx/html;
+    log_not_found off;
+    empty_gif;
+    expires 30d;
+}
+
+location ~ /\. {
+    log_not_found off;
+    error_log stderr crit;
+    deny all;
+}
