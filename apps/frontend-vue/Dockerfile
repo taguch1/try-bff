@@ -1,6 +1,10 @@
 # download binary
 #===============================================================
 FROM node:10.15.3-stretch AS  build-env
+# dowload entrykit
+ENV ENTRYKIT_VERSION=0.4.0
+RUN curl -fsL https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz | \
+  tar xfz - -C /usr/local/bin/
 
 WORKDIR /app
 
@@ -13,15 +17,12 @@ VOLUME /app/node_modules
 ADD . .
 RUN make setup && make release
 
-# dowload entrykit
-ENV ENTRYKIT_VERSION=0.4.0
-RUN curl -fsL https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz | \
-  tar xfz - -C /usr/local/bin/
-
 FROM nginx:1.15.12-alpine
 EXPOSE 80 443
-
 COPY --from=build-env /app/dist /usr/share/nginx/html
+# TODO ignore from multi stage copy
+RUN rm /usr/share/nginx/html/env
+COPY nginx/env /usr/share/nginx/html/env
 COPY nginx/health /usr/share/nginx/html
 COPY nginx/error /usr/share/nginx/html
 COPY nginx/conf /etc/nginx

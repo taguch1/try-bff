@@ -9,3 +9,4 @@ bin
 helm
 logo.jpg
 node_modules
+dist/env
