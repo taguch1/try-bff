@@ -41,5 +41,5 @@ forward a local port to a port on the cluster ip
 
 ```shell
 make forward
-curl  localhost:8080/todos
+curl  localhost:8081/todos
 ```

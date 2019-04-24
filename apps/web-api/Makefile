@@ -28,7 +28,7 @@ include .make/helm.mk
 deploy: docker-build helm-apply
 
 forward:
-	kubectl port-forward service/$(name) 8080:80
+	kubectl port-forward service/$(name) 8081:80
 
 .PHONY: deploy forward
 .DEFAULT_GOAL := deploy
