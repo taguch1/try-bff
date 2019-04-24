@@ -1,0 +1,12 @@
+{
+  "cors": {
+    "AllowedOrigins": ["http://localhost:8080"],
+    "AllowedMethods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "AllowedHeaders": [
+      "Accept",
+      "Authorization",
+      "Content-Type",
+      "X-CSRF-Token"
+    ]
+  }
+}

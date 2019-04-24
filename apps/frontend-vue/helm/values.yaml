@@ -1,12 +1,12 @@
-# Default values for grpc-server.
+# Default values for frontend-vue.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 2
 
 image:
-  repository: taguch1/bff-server
-  tag: latest
+  repository: taguch1/frontend-vue
+  tag: stable
   pullPolicy: IfNotPresent
 
 nameOverride: ""
@@ -14,7 +14,7 @@ fullnameOverride: ""
 
 service:
   type: ClusterIP
-  port: 1323
+  port: 80
 
 ingress:
   enabled: false
@@ -32,12 +32,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-grpc:
-  targetAddress: grpc-server:50051
-  timeoutMillis: 3000
-
-cors:
-  allowedOrigins: "*"
-  allowedMethods: "GET,POST,PUT,DELETE,OPTIONS"
-  allowedHeaders: "Accept,Authorization,Content-Type,X-CSRF-Token"

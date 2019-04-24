@@ -1,0 +1,30 @@
+root /usr/share/nginx/html;
+
+## Unsupported bro   wser
+#set $do_redirect_unsupported "";
+#if ($is_unsupported = 1)                 { set $do_redirect_unsupported "A"; }
+##if ($request_uri != "/unsupported.html") { set $do_redirect_unsupported "${do_redirect_unsupported}B"; }
+#if ($do_redirect_unsupported = "AB")     { return 301 /unsupported.html; }
+
+location = /env {
+    default_type "application/json";
+    alias /usr/share/nginx/html/env/{{ var "NGINX_ENV" | default "local" }}.json;
+}
+
+location ^~ /env/ {
+    error_log stderr {{ var "NGINX_DENY_ERROR_LOG_LEVEL" | default "crit" }};
+    deny all;
+}
+
+location ~* \.(?:jpg|jpeg|gif|css|png|js|ico|woff)$ {
+    open_file_cache max=100 inactive=60s;
+    etag off;
+    add_header Cache-Control s-maxage=60;
+    add_header Cache-Control public;
+}
+
+location / {
+    # Force trailing slash
+    rewrite ^([^.]*[^/])$ $1/ permanent;
+    try_files $uri /index.html;
+}

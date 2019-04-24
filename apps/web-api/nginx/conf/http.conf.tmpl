@@ -1,0 +1,40 @@
+# http
+
+include      mime.types;
+default_type application/octet-stream;
+
+# log format
+map $http_user_agent $loggable {
+    "~Pingdom.*"       0;
+    "~GoogleHC.*"      0;
+    "~HealthChecker.*" 0;
+    default            1;
+}
+
+log_format json escape=json '{"time": "$time_iso8601",'
+  '"unixtime": "$msec",'
+  '"host": "$remote_addr",'
+  '"vhost": "$host",'
+  '"user": "$remote_user",'
+  '"status": "$status",'
+  '"protocol": "$server_protocol",'
+  '"method": "$request_method",'
+  '"requri": "$request_uri",'
+  '"req": "$request",'
+  '"size": "$body_bytes_sent",'
+  '"reqtime": "$request_time",'
+  '"apptime": "$upstream_response_time",'
+  '"ua": "$http_user_agent",'
+  '"forwardedfor": "$http_x_forwarded_for",'
+  '"forwardedproto": "$http_x_forwarded_proto",'
+  '"referrer": "$http_referer"}';
+
+access_log  /dev/stdout json if=$loggable;
+rewrite_log off;
+
+# real-ip [http://nginx.org/en/docs/http/ngx_http_realip_module.html]
+# -with-http_realip_module
+
+real_ip_header     X-Forwarded-For;
+real_ip_recursive  on;
+set_real_ip_from   0.0.0.0/0;

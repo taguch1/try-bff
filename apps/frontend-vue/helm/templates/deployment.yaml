@@ -1,30 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "bff-server.fullname" . }}
+  name: {{ include "frontend-vue.fullname" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "bff-server.name" . }}
+      app: {{ template "frontend-vue.name" . }}
       tier: backend
-      component: go-chi
-      componentVersion: v4
+      component: nginx
       env: {{ .Values.env }}
       heritage: {{ .Release.Service }}
       namespace: {{ .Release.Namespace }}
-      lang: golang
   template:
     metadata:
       labels:
-        app: {{ template "bff-server.name" . }}
+        app: {{ template "frontend-vue.name" . }}
         tier: backend
-        component: go-chi
-        componentVersion: v4
+        component: nginx
         env: {{ .Values.env }}
         heritage: {{ .Release.Service }}
         namespace: {{ .Release.Namespace }}
-        lang: golang
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -32,7 +28,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 1323
+              containerPort: 80
               protocol: TCP
           livenessProbe:
             httpGet:
@@ -42,19 +38,6 @@ spec:
             httpGet:
               path: /health
               port: http
-          env:
-          - name: APP_ENVIRONMENT
-            value: "{{ .Values.env }}"
-          - name: GRPC_TARGETADDRESS
-            value: "{{ .Values.grpc.targetAddress }}"
-          - name: GRPC_TIMEOUTMILLIS
-            value: "{{ .Values.grpc.timeoutMillis }}"
-          - name: ALLOWED_ORIGINS
-            value: "{{ .Values.cors.allowedOrigins }}"
-          - name: ALLOWED_METHODS
-            value: "{{ .Values.cors.allowedMethods }}"
-          - name: ALLOWED_HEADERS
-            value: "{{ .Values.cors.allowedHeaders }}"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
