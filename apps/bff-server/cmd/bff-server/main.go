@@ -14,6 +14,7 @@ import (
 	"github.com/taguch1/try-bff/apps/bff-server/infrastructure/grpc"
 	"github.com/taguch1/try-bff/apps/bff-server/infrastructure/log"
 	"github.com/taguch1/try-bff/apps/bff-server/interfaces/handler"
+	"github.com/taguch1/try-bff/apps/bff-server/interfaces/middleware"
 	"github.com/taguch1/try-bff/apps/bff-server/interfaces/router"
 )
 
@@ -55,6 +56,10 @@ func newServer(ctx context.Context) *http.Server {
 	if err != nil {
 		log.Fatalf(ctx, "failed to load grpc config. err:%s", err)
 	}
+	middlewareConfig, err := middleware.NewConf(middleware.ConfFileName)
+	if err != nil {
+		log.Fatalf(ctx, "failed to load grpc config. err:%s", err)
+	}
 
 	todoService, _ := grpc.NewTodoService(grpcConfig)
 	todoApp := application.NewTodo(todoService)
@@ -62,6 +67,7 @@ func newServer(ctx context.Context) *http.Server {
 	todoHandler := handler.NewTodo(todoApp)
 
 	r := router.NewHTTPRouter(
+		middlewareConfig,
 		healthHandler,
 		todoHandler,
 	)

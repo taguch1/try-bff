@@ -49,6 +49,12 @@ spec:
             value: "{{ .Values.grpc.targetAddress }}"
           - name: GRPC_TIMEOUTMILLIS
             value: "{{ .Values.grpc.timeoutMillis }}"
+          - name: ALLOWED_ORIGINS
+            value: "{{ .Values.cors.allowedOrigins }}"
+          - name: ALLOWED_METHODS
+            value: "{{ .Values.cors.allowedMethods }}"
+          - name: ALLOWED_HEADERS
+            value: "{{ .Values.cors.allowedHeaders }}"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

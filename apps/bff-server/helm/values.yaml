@@ -36,3 +36,8 @@ affinity: {}
 grpc:
   targetAddress: grpc-server:50051
   timeoutMillis: 3000
+
+cors:
+  allowedOrigins: "*"
+  allowedMethods: "GET,POST,PUT,DELETE,OPTIONS"
+  allowedHeaders: "Accept,Authorization,Content-Type,X-CSRF-Token"

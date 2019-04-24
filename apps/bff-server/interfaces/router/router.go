@@ -4,22 +4,25 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	chi_middleware "github.com/go-chi/chi/middleware"
 	"github.com/taguch1/try-bff/apps/bff-server/infrastructure/log"
 	"github.com/taguch1/try-bff/apps/bff-server/interfaces/handler"
+	"github.com/taguch1/try-bff/apps/bff-server/interfaces/middleware"
 )
 
 // NewHTTPRouter constructor
 func NewHTTPRouter(
+	config *middleware.Config,
 	healthHandler handler.Health,
 	todoHandler handler.Todo,
 ) http.Handler {
 
 	r := chi.NewRouter()
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
-	r.Use(middleware.RequestLogger(log.NewLogFormatter(log.Logger)))
-	r.Use(middleware.Recoverer)
+	r.Use(chi_middleware.Recoverer)
+	r.Use(chi_middleware.RequestLogger(log.NewLogFormatter(log.Logger)))
+	// r.Use(middleware.NewCors(config.Cors).Handler)
+	r.Use(chi_middleware.RequestID)
+	r.Use(chi_middleware.RealIP)
 	r.Get("/health", healthHandler.Get)
 	r.Route("/todos", func(r chi.Router) {
 		r.Post("/", todoHandler.Save)

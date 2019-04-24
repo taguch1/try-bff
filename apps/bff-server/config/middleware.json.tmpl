@@ -1,0 +1,7 @@
+{
+  "cors":{
+    "allowedOrigins": {{ var "ALLOWED_ORIGINS" | split "," | tojson }},
+    "allowedMethods": {{ var "ALLOWED_METHODS" | split "," | tojson }},
+    "allowedHeaders": {{ var "ALLOWED_HEADERS" | split "," | tojson }}
+  }
+}
