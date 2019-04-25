@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <span>{{info}}</span>
-    <todo v-bind:todos="todos" v-on:click-add="onAddClick" v-on:click-delete="onDeleteClick"></todo>
+    <todo v-bind:todos="todos" v-on:submit="onSubmit" v-on:delete="onDeleteClick"></todo>
   </div>
 </template>
 
@@ -16,7 +16,7 @@ export default {
   name: "app",
   data() {
     return {
-      info: "helloworld",
+      info: "hello world vue sample",
       todos: []
     };
   },
@@ -26,7 +26,7 @@ export default {
     });
   },
   methods: {
-    onAddClick: function({ title }) {
+    onSubmit: function({ title }) {
       store.add({ title }).then(todo => {
         this.todos.splice(this.todos.length, 0, todo);
       });

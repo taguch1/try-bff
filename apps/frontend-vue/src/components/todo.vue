@@ -1,32 +1,34 @@
 <template>
   <div id="todo">
     <ul>
-      <li
-        v-for="todo in todos"
-        v-bind:key="todo.id"
-        v-on:click="onDeleteClick(todo.id)"
-      >{{ todo.title }}</li>
+      <li v-for="todo in todos" v-bind:key="todo.id" v-on:click="onDelete(todo)">{{ todo.title }}</li>
     </ul>
-    <input v-model="newTitle" id="new-tilte" placeholder="new title">
-    <button v-on:click="onAddClick({title:newTitle})">Add</button>
+    <input
+      v-on:keyup.enter="onSubmit({title})"
+      v-model="title"
+      id="new-tilte"
+      placeholder="new title"
+    >
   </div>
 </template>
 
 <script>
 export default {
-  props: {
-    todos: Array
-  },
-  data: function() {
-    return { newTitle: "" };
-  },
+  props: ["todos"],
   name: "todo",
+  data: function() {
+    return { title: "" };
+  },
   methods: {
-    onAddClick: function({ title }) {
-      this.$emit("click-add", { title });
+    onSubmit: function({ title }) {
+      if (title) {
+        this.$emit("submit", { title });
+        this.title = "";
+      }
     },
-    onDeleteClick: function(id) {
-      this.$emit("click-delete", id);
+    onDelete: function({ id, title }) {
+      this.$emit("delete", id);
+      this.title = title;
     }
   }
 };
