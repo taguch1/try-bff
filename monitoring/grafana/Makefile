@@ -3,35 +3,40 @@
 ENV           := local
 OS            := $(shell uname | tr A-Z a-z )
 SHELL         := /bin/bash
-PREFIX        := /usr/local
-INSTALL_BIN   :=
-TAG_OPTION    := local-latest
 
 # Const
 #===============================================================
-name                 := web-api
+name                 := grafana
 bin_dir              := bin
-image_repo           := taguch1/$(name)
 
 helm_name            := $(name)
 helm_apply_options   :=
 helm_dir             := helm
 
-k8s_namespace        := default
+k8s_namespace        := monitoring
 k8s_deployment       := $(name)
 k8s_context          := docker-for-desktop
 
-local_port           := 8081
+local_port           := 8083
 
 # Include
 #===============================================================
-include .make/docker.mk
-include .make/helm.mk
+include .make/*.mk
 
-deploy: docker-build helm-apply
+# Task
+#===============================================================
+deploy: helm-apply
 
 forward:
 	kubectl port-forward -n $(k8s_namespace) service/$(name) $(local_port):80
 
+open:
+	open http://localhost:$(local_port)
+
+password:
+	@kubectl get secret -n $(k8s_namespace) grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+
+
 .PHONY: deploy forward
 .DEFAULT_GOAL := deploy
+

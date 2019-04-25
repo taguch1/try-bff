@@ -23,6 +23,7 @@ k8s_namespace        := default
 k8s_deployment       := $(name)
 k8s_context          := docker-for-desktop
 
+local_port           := 8080
 # Include
 #===============================================================
 include .make/*.mk
@@ -35,7 +36,11 @@ run-local:
 deploy: docker-build helm-apply
 
 forward:
-	kubectl port-forward service/$(name) 8080:80
+	kubectl port-forward -n $(k8s_namespace) service/$(name) $(local_port):80
+
+open:
+	open http://localhost:$(local_port)
+
 
 .PHONY: run-local deploy forward
 .DEFAULT_GOAL := deploy
