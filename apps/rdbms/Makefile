@@ -32,7 +32,11 @@ migrate: .change-cluster
 load-testdata: .change-cluster
 	kubectl exec -it $$(kubectl get po -l app=rdbms --no-headers  -o "custom-columns=NAME:.metadata.name") -- mysql -uroot -prdbms-password -Drdbms -e "$$(cat scripts/testdata.sql)"
 
-deploy: helm-apply migrate load-testdata
+setup:migrate load-testdata
+
+deploy:
+	$(MAKE) helm-apply
+	sleep 30 && $(MAKE) setup &
 
 forward:
 	kubectl port-forward service/$(name) 3306:3306

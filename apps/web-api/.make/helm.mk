@@ -13,6 +13,9 @@ helm-apply: .change-cluster .image-tag
 helm-delete: .change-cluster
 	helm delete --purge $(helm_name)
 
+helm-rollback: .change-cluster
+	helm rollback $(helm_name) 0
+
 helm-diff: .change-cluster .image-tag
 	helm diff \
 		--values $(helm_dir)/env/$(ENV).yaml \
