@@ -42,13 +42,13 @@ sequenceDiagram
 make all-deploy
 ```
 
-動作確認(apiとjsのipをport-forwardしてopen)
+動作確認(api,js,prometheus,grafana,のipをport-forwardしてブラウザ open)
 
 ```shell
 make forward
 ...
 
-open http://localhost:8080
+make open
 ```
 
 全削除
