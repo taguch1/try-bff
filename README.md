@@ -16,7 +16,7 @@ sequenceDiagram
     participant grpc as gRPCServer
     participant rest as RESTAPIServer
     participant gql  as GraphQLAPIServer
-    participant rdb  as AttchedResourece
+    participant rdb  as Storage
 
     js->>lb:https
     lb->>bff:http
@@ -42,6 +42,15 @@ sequenceDiagram
 make all-deploy
 ```
 
+動作確認(apiとjsのipをport-forwardしてopen)
+
+```shell
+make forward
+...
+
+open http://localhost:8080
+```
+
 全削除
 
 ```shell
@@ -50,36 +59,35 @@ make all-delete
 
 ## タスク
 
-- 各モジュール作成
-- Docker イメージ
-- Helm
-- CI&CD
+- ~~各モジュール作成~~
+- ~~Docker イメージ~~
+- ~~Helm~~
 - 監視
+- CI&CD
 - バッチ処理
+- envoyとか
+- redisとか
+- 追加でgraphqlやrest-serverとか
+- いろいろリファクタ
 
 ## 作業内容概要
 
-### 各モジュール作成
+### 各helm chart作成
 
-- [frondend](https://github.com/taguch1/try-bff/tree/master/apps/frondend)
+- [frontend-vue](https://github.com/taguch1/try-bff/tree/master/apps/frontend-vue)
+- [web-api](https://github.com/taguch1/try-bff/tree/master/apps/web-api)
 - [bff-server](https://github.com/taguch1/try-bff/tree/master/apps/bff-server)
-- [rest-server](https://github.com/taguch1/try-bff/tree/master/apps/rest-server)
 - [grpc-server](https://github.com/taguch1/try-bff/tree/master/apps/grpc-server)
+- [rest-server](https://github.com/taguch1/try-bff/tree/master/apps/rest-server)
 - [graphql-server](https://github.com/taguch1/try-bff/tree/master/apps/graphql-server)
+- [rdbms](https://github.com/taguch1/try-bff/tree/master/apps/rdbms)
 
-### Docker イメージ
+### 監視(予定は未定)
 
-- nginx
-- proxysql
-- mysql
+- [prometheus](https://prometheus.io/)
+- [grafana](https://grafana.com/)
 
-### Helm
-
-- nginx
-- proxysql
-- mysql
-
-### CI(circleci)
+### CI(予定は未定)
 
 各モジュールのunit testとdocker imageのbuildまで
 
@@ -87,14 +95,8 @@ make all-delete
 
 CircleCIがデブロイ先(docker for mac)まで届かないので省略
 
-### 監視(予定は未定)
-
-- [prometheus](https://prometheus.io/)
-- [grafana](https://grafana.com/)
 
 ### バッチ処理(予定は未定)
 
 - CronJob
 - k8sAPIを使ったシンプルなJobManager(シーケンシャルにJobを実行するやつ)
-
-
