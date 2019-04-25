@@ -34,6 +34,20 @@ sequenceDiagram
     gql->>rdb:tcp(mysql)
 ```
 
+## Usage
+
+全デプロイ
+
+```shell
+make all-deploy
+```
+
+全削除
+
+```shell
+make all-delete
+```
+
 ## タスク
 
 - 各モジュール作成
@@ -42,7 +56,6 @@ sequenceDiagram
 - CI&CD
 - 監視
 - バッチ処理
-
 
 ## 作業内容概要
 
