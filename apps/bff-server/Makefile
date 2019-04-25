@@ -22,12 +22,11 @@ helm_dir             := helm
 k8s_namespace        := default
 k8s_deployment       := $(name)
 k8s_context          := docker-for-desktop
+local_port           := 1323
 
 # Include
 #===============================================================
-include .make/build.mk
-include .make/docker.mk
-include .make/helm.mk
+include .make/*.mk
 
 # Task
 #===============================================================
@@ -35,12 +34,12 @@ protoc:
 	protoc -I $(proto_dir) --go_out=plugins=grpc:./proto $(proto_dir)/*.proto
 
 run-local:
-	docker run -it --rm -p1323:1323 $(image_repo):latest
+	docker run -it --rm -p$(local_port):1323 $(image_repo):latest
 
 deploy: docker-build helm-apply
 
 forward:
-	kubectl port-forward service/$(name) 1323:1323
+	kubectl port-forward -n $(k8s_namespace) service/$(name) $(local_port):1323
 
 .PHONY: protoc run-local deploy forward
 .DEFAULT_GOAL := deploy

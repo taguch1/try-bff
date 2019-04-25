@@ -21,6 +21,8 @@ k8s_namespace        := default
 k8s_deployment       := $(name)
 k8s_context          := docker-for-desktop
 
+local_port           := 3306
+
 # Include
 #===============================================================
 include .make/helm.mk
@@ -40,7 +42,7 @@ deploy:
 	sleep 30 && $(MAKE) setup &
 
 forward:
-	kubectl port-forward service/$(name) 3306:3306
+	kubectl port-forward -n $(k8s_namespace) service/$(name) $(local_port):3306
 
 .PHONY: migrate load-testdata deploy forward
 .DEFAULT_GOAL := deploy
