@@ -28,6 +28,6 @@ helm-restart: .change-cluster
 
 # Internal Task
 #===============================================================
-# 事故防止でdocker-for-desktop固定
+
 .change-cluster:
-	kubectx docker-for-desktop
+	kubectl config set-context $(k8s_context) --namespace=$(k8s_namespace)
