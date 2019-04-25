@@ -8,7 +8,6 @@ mysql
 ## Requirement
 
 - kubectl(client:v1.11.9, server:v1.10.11
-- [kubectx](https://github.com/ahmetb/kubectx)
 - helm(client:v2.12.3, server:v2.12.3)
 
 ## Install

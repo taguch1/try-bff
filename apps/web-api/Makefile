@@ -19,6 +19,7 @@ helm_dir             := helm
 
 k8s_namespace        := default
 k8s_deployment       := $(name)
+k8s_context          := docker-for-desktop
 
 # Include
 #===============================================================
