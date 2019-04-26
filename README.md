@@ -36,24 +36,20 @@ sequenceDiagram
 
 ## Usage
 
-全デプロイ
-
 ```shell
+# all resoource deploy
 make all-deploy
-```
 
-動作確認(api,js,prometheus,grafana,のipをport-forwardしてブラウザ open)
+# kubectl get all
+make all-info
 
-```shell
-make forward
-...
+# kubectl port-forward (frontend-vue web-api prometeus grafana)
+make all-forward
 
-make open
-```
+# open browser (frontend-vue prometeus grafana)
+make all-open
 
-全削除
-
-```shell
+# all resoource purge
 make all-delete
 ```
 
