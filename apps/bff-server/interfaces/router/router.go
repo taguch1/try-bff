@@ -13,6 +13,7 @@ import (
 // NewHTTPRouter constructor
 func NewHTTPRouter(
 	config *middleware.Config,
+	metricsHandler http.Handler,
 	healthHandler handler.Health,
 	todoHandler handler.Todo,
 ) http.Handler {
@@ -20,10 +21,11 @@ func NewHTTPRouter(
 	r := chi.NewRouter()
 	r.Use(chi_middleware.Recoverer)
 	r.Use(chi_middleware.RequestLogger(log.NewLogFormatter(log.Logger)))
-	// r.Use(middleware.NewCors(config.Cors).Handler)
+	r.Use(middleware.NewCors(config.Cors).Handler)
 	r.Use(chi_middleware.RequestID)
 	r.Use(chi_middleware.RealIP)
 	r.Get("/health", healthHandler.Get)
+	r.Get("/metrics", http.HandlerFunc(metricsHandler.ServeHTTP))
 	r.Route("/todos", func(r chi.Router) {
 		r.Post("/", todoHandler.Save)
 		r.Get("/", todoHandler.List)
