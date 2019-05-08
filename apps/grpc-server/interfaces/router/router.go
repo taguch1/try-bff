@@ -3,6 +3,7 @@ package router
 import (
 	"time"
 
+	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/taguch1/try-bff/apps/grpc-server/infrastructure/log"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
@@ -47,5 +48,7 @@ func NewGPRCRouter(
 	healthpb.RegisterHealthServer(s, healthServer)
 	pb.RegisterTodoServer(s, todoApp)
 	reflection.Register(s)
+	grpc_prometheus.Register(s)
+
 	return s
 }

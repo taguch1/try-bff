@@ -5,11 +5,13 @@ import (
 	"flag"
 	"fmt"
 	"net"
+	"net/http"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
 
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/taguch1/try-bff/apps/grpc-server/application"
 	"github.com/taguch1/try-bff/apps/grpc-server/infrastructure/log"
 	"github.com/taguch1/try-bff/apps/grpc-server/infrastructure/mysql"
@@ -22,6 +24,7 @@ import (
 const (
 	version     = "v0.0.0"
 	grpcAddress = ":50051"
+	httpAddress = ":1323"
 )
 
 var revision string
@@ -39,20 +42,20 @@ func main() {
 	}
 
 	ctx := context.Background()
-	gPRCRouter := newServer(ctx)
+	gPRCRouter, httpServer := newServer(ctx)
 
 	log.Info(ctx, "start grpc server")
-	startServer(ctx, gPRCRouter)
+	startServer(ctx, gPRCRouter, httpServer)
 
 	quitCh := make(chan os.Signal)
 	signal.Notify(quitCh, syscall.SIGINT, syscall.SIGTERM)
 	<-quitCh
 
 	log.Info(ctx, "shutdown grpc server")
-	shutdownServer(ctx, gPRCRouter)
+	shutdownServer(ctx, gPRCRouter, httpServer)
 }
 
-func newServer(ctx context.Context) *grpc.Server {
+func newServer(ctx context.Context) (*grpc.Server, *http.Server) {
 	healthServer := health.NewServer()
 	mysqlConfig, err := mysql.NewConf(mysql.ConfFileName)
 	if err != nil {
@@ -65,10 +68,15 @@ func newServer(ctx context.Context) *grpc.Server {
 	todoRepo := persistence.NewTodo(db)
 	todoApp := application.NewTodo(todoRepo)
 	gPRCRouter := router.NewGPRCRouter(healthServer, todoApp)
-	return gPRCRouter
+
+	handler := http.NewServeMux()
+	handler.Handle("/metrics", promhttp.Handler())
+	httpServer := &http.Server{Addr: httpAddress, Handler: handler}
+
+	return gPRCRouter, httpServer
 }
 
-func startServer(ctx context.Context, gPRCRouter *grpc.Server) {
+func startServer(ctx context.Context, gPRCRouter *grpc.Server, httpServer *http.Server) {
 	// gRPC server
 	lis, err := net.Listen("tcp", grpcAddress)
 	if err != nil {
@@ -80,9 +88,16 @@ func startServer(ctx context.Context, gPRCRouter *grpc.Server) {
 			log.Fatalf(ctx, "failed to start the grpc server  %s", err)
 		}
 	}()
+
+	go func() {
+		if err := httpServer.ListenAndServe(); err != nil {
+			log.Fatalf(ctx, "failed to start the http server  %s", err)
+		}
+	}()
+
 }
 
-func shutdownServer(ctx context.Context, gPRCRouter *grpc.Server) {
+func shutdownServer(ctx context.Context, gPRCRouter *grpc.Server, httpServer *http.Server) {
 
 	//TODO
 	// - Readinessチェックをフラグで制御
@@ -91,11 +106,19 @@ func shutdownServer(ctx context.Context, gPRCRouter *grpc.Server) {
 	// 3. ReadinessチェックでPodが外れてからシャットダウン処理をする
 
 	var wg sync.WaitGroup
-	wg.Add(1)
+	wg.Add(2)
 
 	go func() {
 		gPRCRouter.GracefulStop()
 		wg.Done()
 	}()
+
+	go func() {
+		if err := httpServer.Shutdown(ctx); err != nil {
+			log.Errorf(ctx, "failed to shutdown the http server: %s", err)
+		}
+		wg.Done()
+	}()
+
 	wg.Wait()
 }

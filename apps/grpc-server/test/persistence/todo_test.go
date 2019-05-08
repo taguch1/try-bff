@@ -1,4 +1,4 @@
-package persistence
+package persistence_test
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/taguch1/try-bff/apps/grpc-server/infrastructure/mysql"
+	"github.com/taguch1/try-bff/apps/grpc-server/infrastructure/persistence"
 )
 
 func TestHoge(t *testing.T) {
@@ -16,15 +17,20 @@ func TestHoge(t *testing.T) {
 	db, err := mysql.Open(mysqlConfig)
 	assert.Nil(t, err)
 
-	todoRepo := NewTodo(db)
+	todoRepo := persistence.NewTodo(db)
 
+	id := "IDX"
 	title := "TitleX"
-	todo, err := todoRepo.Save(ctx, title)
+
+	err = todoRepo.Delete(ctx, id)
+	assert.Nil(t, err)
+
+	todo, err := todoRepo.Save(ctx, id, title)
 	assert.Nil(t, err)
 	assert.Equal(t, title, todo.Title)
 
-	id := "ID1"
-	todo, err = todoRepo.Get(ctx, id)
+	// id := "ID1"
+	todo, err = todoRepo.Get(ctx, "ID1")
 	assert.Nil(t, err)
 	assert.Equal(t, "ID1", todo.ID)
 	assert.Equal(t, "TitleA", todo.Title)

@@ -24,26 +24,26 @@ _open-grafana:
 
 # Task
 #===============================================================
-all-cat:
+cat-all:
 	find ./apps/*/Makefile -exec dirname {} \; | xargs -I % -n 1 bash -c 'cd  "%" && $(MAKE) helm-cat'
 	find ./monitoring/*/Makefile -exec dirname {} \; | xargs -I % -n 1 bash -c 'cd  "%" && $(MAKE) helm-cat'
-all-deploy:
+deploy-all:
 	find ./apps/*/Makefile -exec dirname {} \; | xargs -I % -n 1 bash -c 'cd  "%" && $(MAKE)'
 	find ./monitoring/*/Makefile -exec dirname {} \; | xargs -I % -n 1 bash -c 'cd  "%" && $(MAKE)'
-all-delete:
+delete-all:
 	find ./apps/*/Makefile -exec dirname {} \; | xargs -I % -n 1 bash -c 'cd  "%" && $(MAKE) helm-delete'
 	find ./monitoring/*/Makefile -exec dirname {} \; | xargs -I % -n 1 bash -c 'cd  "%" && $(MAKE) helm-delete'
-all-info:
+info-all:
 	@echo "\n[nodes]------------------------------------------------------------------------------------------------"
 	@kubectl get nodes
 	@echo "\n[$(k8s_namespace)]----------------------------------------------------------------------------------------------"
 	@kubectl get all -n $(k8s_namespace)
 	@echo "\n[$(k8s_namespace_monitoring)]-------------------------------------------------------------------------------------------"
 	@kubectl get all -n $(k8s_namespace_monitoring)
-all-forward:
+forward-all:
 	$(MAKE) -j 4 _forward-api-web-api _forward-frontend-vue _forward-prometheus _forward-grafana
-all-open:
+open-all:
 	$(MAKE) -j 3 _open-js-frontend-vue _open-prometheus _open-grafana
 
-.PHONY: all-cat all-deploy all-delete all-info all-foward all-open
-.DEFAULT_GOAL := all-info
+.PHONY: cat-all deploy-all delete-all info-all foward-all open-all
+.DEFAULT_GOAL := info-all
