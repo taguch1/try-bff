@@ -12,12 +12,16 @@ metadata:
     namespace: {{ .Release.Namespace }}
     lang: golang
 spec:
-  type: {{ .Values.service.type }}
+  type: ClusterIP
   ports:
     - port: 50051
       targetPort: 50051
       protocol: TCP
       name: grpc
+    - port: 1323
+      targetPort: 1323
+      protocol: TCP
+      name: http
   selector:
     app: {{ template "grpc-server.name" . }}
     tier: backend
