@@ -53,23 +53,23 @@ ID=$(curl -v -XPOST -H 'Content-Type: application/json' -d '{"title": "TitleA"}'
 # get
 
 ```shell
-curl -v "http://localhost:1323/todos/${ID}"
+curl -v "http://localhost:1323/v1/todos/${ID}"
 ```
 
 # list
 
 ```shell
-curl -v http://localhost:1323/todos
+curl -v http://localhost:1323/v1/todos
 ```
 
 # update
 
 ```shell
-curl -XPATCH -v -H 'Content-Type: application/json'  -d '{"title": "TitleA-update"}'  "http://localhost:1323/todos/${ID}"
+curl -XPATCH -v -H 'Content-Type: application/json'  -d '{"title": "TitleA-update"}'  "http://localhost:1323/v1/todos/${ID}"
 ```
 
 # delete
 
 ```shell
-curl -v -XDELETE "http://localhost:1323/todos/${ID}"
+curl -v -XDELETE "http://localhost:1323/v1/todos/${ID}"
 ```
