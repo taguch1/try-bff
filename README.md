@@ -38,19 +38,19 @@ sequenceDiagram
 
 ```shell
 # all resoource deploy
-make all-deploy
+make deploy-all
 
 # kubectl get all
-make all-info
+make info-all
 
 # kubectl port-forward (frontend-vue web-api prometeus grafana)
-make all-forward
+make forward-all
 
 # open browser (frontend-vue prometeus grafana)
-make all-open
+make open-all
 
 # all resoource purge
-make all-delete
+make delete-all
 ```
 
 ## タスク
