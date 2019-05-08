@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/taguch1/try-bff/apps/bff-server/domain/model"
 	"github.com/taguch1/try-bff/apps/bff-server/domain/service"
 	pb "github.com/taguch1/try-bff/apps/bff-server/proto"
@@ -21,14 +23,25 @@ type todoSrviceImpl struct {
 }
 
 // NewTodoService todo service constructor
-func NewTodoService(config *Config) (service.Todo, error) {
-	conn, err := grpc.Dial(config.TargetAddress, grpc.WithInsecure())
+func NewTodoService(config *Config) (service.Todo, *prometheus.Registry, error) {
+
+	reg := prometheus.NewRegistry()
+	grpcMetrics := grpc_prometheus.NewClientMetrics()
+	reg.MustRegister(grpcMetrics)
+
+	conn, err := grpc.Dial(
+		config.TargetAddress,
+		grpc.WithUnaryInterceptor(grpcMetrics.UnaryClientInterceptor()),
+		grpc.WithStreamInterceptor(grpcMetrics.StreamClientInterceptor()),
+		grpc.WithInsecure(),
+	)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	timeout := time.Duration(config.TimeoutMillis) * time.Millisecond
 	todoClient := pb.NewTodoClient(conn)
-	return &todoSrviceImpl{timeout, todoClient}, nil
+
+	return &todoSrviceImpl{timeout, todoClient}, reg, nil
 }
 
 func (s *todoSrviceImpl) Save(ctx context.Context, title string) (*model.Todo, error) {

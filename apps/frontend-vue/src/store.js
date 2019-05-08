@@ -1,12 +1,12 @@
 const config = {};
-
+const apiVersion = "v1";
 export function setup({ url }) {
   config.url = url;
 }
 
 export async function list() {
   try {
-    const response = await fetch(`${config.url}/todos`);
+    const response = await fetch(`${config.url}/${apiVersion}/todos`);
     if (response.status !== 200) {
       throw new Error(
         "Looks like there was a problem. Status Code: " + response.status
@@ -20,7 +20,7 @@ export async function list() {
 }
 export async function add({ title }) {
   try {
-    const response = await fetch(`${config.url}/todos`, {
+    const response = await fetch(`${config.url}/${apiVersion}/todos`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -40,7 +40,7 @@ export async function add({ title }) {
 }
 export async function remove(id) {
   try {
-    const response = await fetch(`${config.url}/todos/${id}`, {
+    const response = await fetch(`${config.url}/${apiVersion}/todos/${id}`, {
       method: "DELETE"
     });
     if (response.status !== 204) {

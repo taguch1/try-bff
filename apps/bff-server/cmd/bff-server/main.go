@@ -61,13 +61,14 @@ func newServer(ctx context.Context) *http.Server {
 		log.Fatalf(ctx, "failed to load grpc config. err:%s", err)
 	}
 
-	todoService, _ := grpc.NewTodoService(grpcConfig)
+	todoService, reg, _ := grpc.NewTodoService(grpcConfig)
 	todoApp := application.NewTodo(todoService)
 	healthHandler := handler.NewHealth()
 	todoHandler := handler.NewTodo(todoApp)
-
+	metricsHandler := handler.NewPrometeus(reg)
 	r := router.NewHTTPRouter(
 		middlewareConfig,
+		metricsHandler,
 		healthHandler,
 		todoHandler,
 	)
