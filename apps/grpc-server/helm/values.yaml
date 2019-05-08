@@ -12,10 +12,6 @@ image:
 nameOverride: ""
 fullnameOverride: ""
 
-service:
-  type: ClusterIP
-  port: 50051
-
 ingress:
   enabled: false
 
